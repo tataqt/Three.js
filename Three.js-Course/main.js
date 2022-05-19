@@ -23,11 +23,23 @@ const planeGeometry = new THREE.PlaneGeometry(
 );
 const planeMaterial = new THREE.MeshPhongMaterial({
   color: 0xff0000,
-  side: THREE.DoubleSide
+  side: THREE.DoubleSide,
+  flatShading: THREE.FlatShading
 });
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+const { array } = planeMesh.geometry.attributes.position;
 
-scene.add(planeMesh)
+scene.add(planeMesh);
+
+for (let index = 0; index < array.length; index += 3) {
+  const x = array[index];
+  const y = array[index + 1];
+  const z = array[index + 2];
+
+  array[index + 2] = z + Math.random();
+
+  console.log(x, y, z);
+}
 
 function animate() {
   requestAnimationFrame(animate);
