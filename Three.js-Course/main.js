@@ -89,13 +89,30 @@ function animate() {
   renderer.render(scene, camera);
 
   raycaster.setFromCamera(mouse, camera);
-  const intersect = raycaster.intersectObject(planeMesh);
-  if (intersect.length) {
-    
-    intersect[0].object.geometry.attributes.color.setX(1, 0)
-    intersect[0].object.geometry.attributes.color.needsUpdate = 1;
 
-    console.log(intersect[0].object.geometry.attributes.color.getX());
+  planeMesh.geometry.attributes.position.needsUpdate = true
+
+  const intersects = raycaster.intersectObject(planeMesh);
+
+  if (intersects.length > 0) {
+    const { color } = intersects[0].object.geometry.attributes;
+
+    // vertice 1
+    color.setX(intersects[0].face.a, 0.1);
+    color.setY(intersects[0].face.a, 0.5);
+    color.setZ(intersects[0].face.a, 1);
+
+    // vertice 2
+    color.setX(intersects[0].face.b, 0.1);
+    color.setY(intersects[0].face.b, 0.5);
+    color.setZ(intersects[0].face.b, 1);
+
+    // vertice 3
+    color.setX(intersects[0].face.c, 0.1);
+    color.setY(intersects[0].face.c, 0.5);
+    color.setZ(intersects[0].face.c, 1);
+
+    color.needsUpdate = true;
   }
 }
 
