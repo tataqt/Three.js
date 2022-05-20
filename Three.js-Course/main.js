@@ -1,4 +1,7 @@
 import * as THREE from 'https://unpkg.com/three@0.126.1/build/three.module.js';
+import {
+  OrbitControls
+} from 'https://unpkg.com/three@0.126.1/examples/jsm/controls/OrbitControls.js';
 import * as dat from 'dat.gui';
 import './style.css';
 
@@ -19,6 +22,9 @@ const renderer = new THREE.WebGLRenderer();
 const light = new THREE.DirectionalLight(
   0xffffff, 1
 );
+const backLight = new THREE.DirectionalLight(
+  0xffffff, 1
+);
 
 // init dat.gui modify plane
 gui.add(world.plane, 'width', 1, 20).onChange(generatePlane);
@@ -29,10 +35,15 @@ gui.add(world.plane, 'heightSegments', 1, 50).onChange(generatePlane);
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(devicePixelRatio);
 
+// create orbit controls
+new OrbitControls(camera, renderer.domElement);
+
 camera.position.z = 5;
 light.position.set(0, 0, 1);
+backLight.position.set(0, 0, -1);
 
 scene.add(light);
+scene.add(backLight);
 
 document.body.appendChild(renderer.domElement);
 
@@ -52,7 +63,7 @@ const {
 
 scene.add(planeMesh);
 
-// modify  z index of mesg
+// modify  z index of mesh
 for (let index = 0; index < array.length; index += 3) {
   const x = array[index];
   const y = array[index + 1];
