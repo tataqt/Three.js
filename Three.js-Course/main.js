@@ -27,13 +27,12 @@ const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 10
 const renderer = new THREE.WebGLRenderer();
 const light = new THREE.DirectionalLight(0xffffff, 1);
 const backLight = new THREE.DirectionalLight(0xffffff, 1);
-const colors = [];
 
 // init dat.gui modify plane
-gui.add(world.plane, 'width', 1, 50).onChange(generatePlane);
-gui.add(world.plane, 'height', 1, 50).onChange(generatePlane);
-gui.add(world.plane, 'widthSegments', 1, 50).onChange(generatePlane);
-gui.add(world.plane, 'heightSegments', 1, 50).onChange(generatePlane);
+gui.add(world.plane, 'width', 1, 500).onChange(generatePlane);
+gui.add(world.plane, 'height', 1, 500).onChange(generatePlane);
+gui.add(world.plane, 'widthSegments', 1, 100).onChange(generatePlane);
+gui.add(world.plane, 'heightSegments', 1, 100).onChange(generatePlane);
 
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(devicePixelRatio);
@@ -42,9 +41,9 @@ renderer.setPixelRatio(devicePixelRatio);
 new OrbitControls(camera, renderer.domElement);
 
 // set positions
-camera.position.z = 5;
-light.position.set(0, 0, 1);
-backLight.position.set(0, 0, -1);
+camera.position.z = 50;
+light.position.set(0, -1, 1);
+backLight.position.set(0, -1, -1);
 
 document.body.appendChild(renderer.domElement);
 
@@ -58,38 +57,7 @@ const planeMaterial = new THREE.MeshPhongMaterial({
   vertexColors: true
 });
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
-
-const {
-  array
-} = planeMesh.geometry.attributes.position;
-const randomValues = [];
-
-// modify z index of mesh (verticy position)
-for (let index = 0; index < array.length; index++) {
-  if (index % 3 === 0) {
-    const x = array[index];
-    const y = array[index + 1];
-    const z = array[index + 2];
-
-    array[index] = x + Math.random() - 0.5;
-    array[index + 1] = y + Math.random() - 0.5;
-    array[index + 2] = z + Math.random();
-
-  }
-  randomValues.push(Math.random() - 0.5);
-}
-
-planeMesh.geometry.attributes.position.randomValues = randomValues;
-planeMesh.geometry.attributes.position.originalPosition = planeMesh.geometry.attributes.position.array;
-
-// setColor
-for (let index = 0; index < planeMesh.geometry.attributes.position.count; index++) {
-  colors.push(0, .19, .4);
-}
-
-planeMesh.geometry.setAttribute('color',
-  new THREE.BufferAttribute(new Float32Array(colors), 3)
-);
+generatePlane();
 
 // add to scene
 scene.add(planeMesh);
@@ -97,7 +65,6 @@ scene.add(light);
 scene.add(backLight);
 
 let frame = 0;
-
 function animate() {
   requestAnimationFrame(animate);
   frame += 0.01;
@@ -108,9 +75,9 @@ function animate() {
   const { array, originalPosition, randomValues } = planeMesh.geometry.attributes.position;
   for (let index = 0; index < array.length; index += 3) {
     // x
-    array[index] = originalPosition[index] + Math.cos(frame + randomValues[index]) * 0.003;
+    array[index] = originalPosition[index] + Math.cos(frame + randomValues[index]) * 0.01;
     // y
-    array[index + 1] = originalPosition[index + 1] + Math.sin(frame + randomValues[index + 1]) * 0.003;
+    array[index + 1] = originalPosition[index + 1] + Math.sin(frame + randomValues[index + 1]) * 0.01;
   }
 
   planeMesh.geometry.attributes.position.needsUpdate = true
@@ -154,6 +121,7 @@ function animate() {
 }
 
 function generatePlane() {
+  // change PlaneMesh Geometry
   planeMesh.geometry.dispose();
   planeMesh.geometry = new THREE.PlaneGeometry(
     world.plane.width,
@@ -161,19 +129,35 @@ function generatePlane() {
     world.plane.widthSegments,
     world.plane.heightSegments
   );
-
+  // some constants to manipulate
   const {
     array
   } = planeMesh.geometry.attributes.position;
+  const randomValues = [];
+  const colors = [];
 
-  for (let index = 0; index < array.length; index += 3) {
-    const x = array[index];
-    const y = array[index + 1];
-    const z = array[index + 2];
+  // modify z index of mesh (verticy position)
+  for (let index = 0; index < array.length; index++) {
+    if (index % 3 === 0) {
+      const x = array[index];
+      const y = array[index + 1];
+      const z = array[index + 2];
 
-    array[index] = x + Math.random() - 0.5;
-    array[index + 1] = y + Math.random() - 0.5;
-    array[index + 2] = z + Math.random();
+      array[index] = x + (Math.random() - 0.5) * 3;
+      array[index + 1] = y + (Math.random() - 0.5) * 3;
+      array[index + 2] = z + (Math.random() - 0.5) * 3;
+
+    }
+
+    randomValues.push(Math.random() * Math.PI * 2);
+  }
+
+  planeMesh.geometry.attributes.position.randomValues = randomValues;
+  planeMesh.geometry.attributes.position.originalPosition = planeMesh.geometry.attributes.position.array;
+
+  // SetColor
+  for (let index = 0; index < planeMesh.geometry.attributes.position.count; index++) {
+    colors.push(0, .19, .4);
   }
 
   planeMesh.geometry.setAttribute('color',
