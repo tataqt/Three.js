@@ -8,19 +8,19 @@ import './style.css';
 
 // dat.gui constants
 const gui = new dat.GUI();
-const world = {
-  plane: {
-    width: 19,
-    height: 19,
-    widthSegments: 17,
-    heightSegments: 17
-  }
-};
 // main constants
 const mouse = {
   x: undefined,
   y: undefined
 }
+const world = {
+  plane: {
+    width: 400,
+    height: 400,
+    widthSegments: 50,
+    heightSegments: 50
+  }
+};
 const raycaster = new THREE.Raycaster();
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
@@ -58,23 +58,29 @@ const planeMaterial = new THREE.MeshPhongMaterial({
   vertexColors: true
 });
 const planeMesh = new THREE.Mesh(planeGeometry, planeMaterial);
+
 const {
   array
 } = planeMesh.geometry.attributes.position;
+const randomValues = [];
 
-// add to scene
-scene.add(planeMesh);
-scene.add(light);
-scene.add(backLight);
+// modify z index of mesh (verticy position)
+for (let index = 0; index < array.length; index++) {
+  if (index % 3 === 0) {
+    const x = array[index];
+    const y = array[index + 1];
+    const z = array[index + 2];
 
-// modify z index of mesh
-for (let index = 0; index < array.length; index += 3) {
-  const x = array[index];
-  const y = array[index + 1];
-  const z = array[index + 2];
+    array[index] = x + Math.random() - 0.5;
+    array[index + 1] = y + Math.random() - 0.5;
+    array[index + 2] = z + Math.random();
 
-  array[index + 2] = z + Math.random();
+  }
+  randomValues.push(Math.random() - 0.5);
 }
+
+planeMesh.geometry.attributes.position.randomValues = randomValues;
+planeMesh.geometry.attributes.position.originalPosition = planeMesh.geometry.attributes.position.array;
 
 // setColor
 for (let index = 0; index < planeMesh.geometry.attributes.position.count; index++) {
@@ -85,11 +91,27 @@ planeMesh.geometry.setAttribute('color',
   new THREE.BufferAttribute(new Float32Array(colors), 3)
 );
 
+// add to scene
+scene.add(planeMesh);
+scene.add(light);
+scene.add(backLight);
+
+let frame = 0;
+
 function animate() {
   requestAnimationFrame(animate);
+  frame += 0.01;
   renderer.render(scene, camera);
 
   raycaster.setFromCamera(mouse, camera);
+
+  const { array, originalPosition, randomValues } = planeMesh.geometry.attributes.position;
+  for (let index = 0; index < array.length; index += 3) {
+    // x
+    array[index] = originalPosition[index] + Math.cos(frame + randomValues[index]) * 0.003;
+    // y
+    array[index + 1] = originalPosition[index + 1] + Math.sin(frame + randomValues[index + 1]) * 0.003;
+  }
 
   planeMesh.geometry.attributes.position.needsUpdate = true
 
@@ -149,6 +171,8 @@ function generatePlane() {
     const y = array[index + 1];
     const z = array[index + 2];
 
+    array[index] = x + Math.random() - 0.5;
+    array[index + 1] = y + Math.random() - 0.5;
     array[index + 2] = z + Math.random();
   }
 
