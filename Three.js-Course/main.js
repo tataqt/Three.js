@@ -37,8 +37,8 @@ gui.add(world.plane, 'heightSegments', 1, 100).onChange(generatePlane);
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(devicePixelRatio);
 
-// create orbit controls
-new OrbitControls(camera, renderer.domElement);
+// create orbit controls (uncoment if u need)
+// new OrbitControls(camera, renderer.domElement);
 
 // set positions
 camera.position.z = 50;
