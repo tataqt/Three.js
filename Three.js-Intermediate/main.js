@@ -1,4 +1,7 @@
 import * as THREE from 'three';
+import vertexShader from './shaders/vertex.glsl';
+
+console.log(vertexShader);
 
 // main constants
 const scene = new THREE.Scene();
@@ -14,7 +17,7 @@ const renderer = new THREE.WebGLRenderer({
 
 // init plane
 renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(window.devicePixelRatio); 
+renderer.setPixelRatio(window.devicePixelRatio);
 
 document.body.appendChild(renderer.domElement);
 
@@ -23,9 +26,10 @@ camera.position.z = 10;
 // create a sphere
 const sphere = new THREE.Mesh(
   new THREE.SphereGeometry(5, 50, 50),
-  new THREE.MeshBasicMaterial({
-    // color: 0xFF0000
-    map: new THREE.TextureLoader().load('./img/globe.jpg')
+  new THREE.ShaderMaterial({
+    vertexShader,
+    // fragmentShader: vertexShader,
+
   })
 );
 
