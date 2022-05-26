@@ -10,9 +10,23 @@ const camera = new THREE.PerspectiveCamera(
 );
 const renderer = new THREE.WebGLRenderer();
 
+// init plane
 renderer.setSize(innerWidth, innerHeight);
 
 document.body.appendChild(renderer.domElement);
+
+camera.position.z = 10;
+
+// create a sphere
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(5, 50, 50),
+  new THREE.MeshBasicMaterial({
+    // color: 0xFF0000
+    map: new THREE.TextureLoader().load('./img/globe.jpg')
+  })
+);
+
+scene.add(sphere);
 
 function animate() {
   requestAnimationFrame(animate);
