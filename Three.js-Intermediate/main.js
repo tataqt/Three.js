@@ -4,9 +4,10 @@ import vertexShader from './shaders/vertex.glsl';
 import fragmentShader from './shaders/fragment.glsl';
 import atmosphereVertex from './shaders/atmosphereVertex.glsl';
 import atmosphereFragment from './shaders/atmosphereFragment.glsl';
-import { Float32BufferAttribute } from 'three';
+import './style.css'
 
 // main constants
+const canvasContainer = document.querySelector('.flex__canvas');
 const mouse = {
   x: 0,
   y: 0
@@ -14,21 +15,20 @@ const mouse = {
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
-  innerWidth / innerHeight,
+  canvasContainer.offsetWidth / canvasContainer.offsetHeight,
   0.1,
   1000
 );
 const renderer = new THREE.WebGLRenderer({
-  antialias: true
+  antialias: true,
+  canvas: document.querySelector('canvas')
 });
 
 // init plane
-renderer.setSize(innerWidth, innerHeight);
+renderer.setSize(canvasContainer.offsetWidth, canvasContainer.offsetHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 
-document.body.appendChild(renderer.domElement);
-
-camera.position.z = 10;
+camera.position.z = 15;
 
 // create a sphere
 const sphere = new THREE.Mesh(
@@ -70,7 +70,7 @@ const starMaterial = new THREE.PointsMaterial({
 
 const starVertices = [];
 //create x, y, z positions
-for (let index = 0; index < 10000; index++) {
+for (let index = 0; index < 5000; index++) {
   const x = (Math.random() - 0.5) * 2000;
   const y = (Math.random() - 0.5) * 2000;
   const z = -Math.random() * 2000;
@@ -107,6 +107,6 @@ function animate() {
 animate();
 
 addEventListener('mousemove', (e) => {
-  mouse.x = (e.clientX / innerWidth) * 2 - 1;
-  mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+  mouse.x = (e.clientX / canvasContainer.offsetWidth) * 2 - 1;
+  mouse.y = -(e.clientY / canvasContainer.offsetHeight) * 2 + 1;
 });

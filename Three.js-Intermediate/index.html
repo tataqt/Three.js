@@ -1,13 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vite App</title>
+</head>
+
+<body>
+  <div id="app" class="flex">
+    <div class="flex__text">
+      <div class="flex__text--container">
+        <h1 class="flex__text-heading">Challenging the standard of space exploration</h1>
+        <p class="flex__text-description">
+          Millions of developers and companies build, ship, and maintain their software on
+          GitHub—the largest and most advanced development platform in the world.
+        </p>
+        <div>
+          <button class="flex__text-btn">Learn more</button>
+        </div>
+      </div>
+    </div>
+    <div class="flex__canvas">
+      <canvas></canvas>
+    </div>
+  </div>
+  <script type="module" src="/main.js"></script>
+</body>
+
 </html>
