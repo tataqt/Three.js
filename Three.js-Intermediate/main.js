@@ -1,10 +1,15 @@
 import * as THREE from 'three';
+import gsap from 'gsap';
 import vertexShader from './shaders/vertex.glsl';
 import fragmentShader from './shaders/fragment.glsl';
 import atmosphereVertex from './shaders/atmosphereVertex.glsl';
 import atmosphereFragment from './shaders/atmosphereFragment.glsl';
 
 // main constants
+const mouse = {
+  x: 0,
+  y: 0
+}
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
   75,
@@ -49,15 +54,29 @@ const atmosphere = new THREE.Mesh(
   })
 );
 
-atmosphere.scale.set(1.1, 1.1, 1.1)
+// scale atmosphere
+atmosphere.scale.set(1.1, 1.1, 1.1);
 
-scene.add(sphere);
+const group = new THREE.Group();
+group.add(sphere);
+
+scene.add(group);
 scene.add(atmosphere);
 
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
-  sphere.rotation.y +=0.001;
+  sphere.rotation.y += 0.001;
+  gsap.to(group.rotation, {
+    x: -mouse.y * 0.5,
+    y: mouse.x * 0.5,
+    duration: 2
+  });
 }
 
 animate();
+
+addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / innerHeight) * 2 + 1;
+});

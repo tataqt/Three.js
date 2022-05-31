@@ -1,11 +1,13 @@
 lockfileVersion: 5.4
 
 specifiers:
+  gsap: ^3.10.4
   three: ^0.140.2
   vite: ^2.9.9
   vite-plugin-string: ^1.1.2
 
 dependencies:
+  gsap: 3.10.4
   three: 0.140.2
   vite-plugin-string: 1.1.2
 
@@ -245,6 +247,10 @@ packages:
   /function-bind/1.1.1:
     resolution: {integrity: sha512-yIovAzMX49sF8Yl58fSCWJ5svSLuaibPxXQJFLmBObTuCr0Mf1KiPopGM9NiFjiYBCbfaa2Fh6breQ6ANVTI0A==}
     dev: true
+
+  /gsap/3.10.4:
+    resolution: {integrity: sha512-6QatdkKxXCMfvCW4rM++0RqyLQAzFX5nwl3yHS0XPgkZBkiSEY3VZVbMltrdtsbER/xZonLtyHt684wRp4erlQ==}
+    dev: false
 
   /has/1.0.3:
     resolution: {integrity: sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==}
