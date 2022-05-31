@@ -4,6 +4,7 @@ import vertexShader from './shaders/vertex.glsl';
 import fragmentShader from './shaders/fragment.glsl';
 import atmosphereVertex from './shaders/atmosphereVertex.glsl';
 import atmosphereFragment from './shaders/atmosphereFragment.glsl';
+import { Float32BufferAttribute } from 'three';
 
 // main constants
 const mouse = {
@@ -57,11 +58,40 @@ const atmosphere = new THREE.Mesh(
 // scale atmosphere
 atmosphere.scale.set(1.1, 1.1, 1.1);
 
+// create a group
 const group = new THREE.Group();
 group.add(sphere);
 
+// create star
+const starGeometry = new THREE.BufferGeometry();
+const starMaterial = new THREE.PointsMaterial({
+  color: 0xffffff
+});
+
+const starVertices = [];
+//create x, y, z positions
+for (let index = 0; index < 10000; index++) {
+  const x = (Math.random() - 0.5) * 2000;
+  const y = (Math.random() - 0.5) * 2000;
+  const z = -Math.random() * 2000;
+  starVertices.push(x, y, z)
+}
+
+//set stars position
+starGeometry.setAttribute(
+  'position',
+  new THREE.Float32BufferAttribute(starVertices, 3)
+);
+
+const stars = new THREE.Points(
+  starGeometry,
+  starMaterial
+);
+
+
 scene.add(group);
 scene.add(atmosphere);
+scene.add(stars);
 
 function animate() {
   requestAnimationFrame(animate);
